@@ -1,4 +1,4 @@
-#HCI-CommandCenter Group
+# HCI-CommandCenter Group
 
 ## Description
 
