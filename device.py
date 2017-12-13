@@ -68,7 +68,8 @@ class Device:
     '''
     def get_command(self, command):
         return command
-
+# the robot can perform following functions:
+# standby, simpleWalk, stand, moveHead, moveArm 
 class Ros(Device):
     def __init__(self):
         super().__init__()
@@ -83,6 +84,25 @@ class Ros(Device):
         msg = 'Robot 1 successfully stand up.\n'
         return msg
 
+    def simpleWalk(self):
+        # simpleWalk.main()
+        msg = 'Robot 1 start simple walking. \n'
+        return msg
+
+    def standby(self):
+        # standby.main();
+        msg = 'Robot 1 successfully sit down. \n'
+        return msg
+
+    def moveHead(self):
+        # smoveHead.main();
+        msg = 'Robot 1 successfully moved head. \n'
+        return msg
+
+    def moveArm(self):
+        # standby.main();
+        msg = 'Robot 1 successfully moved arm. \n'
+        return msg
 
 class Kinect(Device):
     def __init__(self):

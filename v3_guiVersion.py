@@ -157,6 +157,15 @@ class ControlCenter(QWidget):
             if instruction == '>> stand':
                 self.ros_1_str += self.ros.stand();
 
+            if instruction == '>> simpleWalk'
+                self.ros_1_str += self.ros.simpleWalk();
+
+            if instruction == '>> standby':
+                self.ros_1_str += self.ros.standby();
+
+            if instruction == '>> moveHead'
+                self.ros_1_str += self.ros.moveHead();
+
 
             # set the print text to ros_1_str
             self.curDeviceStatus.setText(self.ros_1_str)
