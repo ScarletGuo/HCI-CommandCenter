@@ -150,7 +150,7 @@ class ControlCenter(QWidget):
         # if current tab is ROS_1
         elif self.curDevice == 'ROS_1':
 
-            ros_mannual = "1.getStatus\n2.stand\n3.move\n4.sitDown\n5.simpleWalk N\n6.moveHead\n7.moveArm\n"
+            ros_mannual = "1.getStatus\n3.move\n4.sitDown\n5.simpleWalk N\n6.moveHead\n2.moveArm\n"
             self.ros_1_str += '>> '
             self.ros_1_str += instruction
             self.ros_1_str += '\n'
@@ -176,16 +176,19 @@ class ControlCenter(QWidget):
             if instruction == 'moveArm':
                 self.ros_1_str += self.ros.moveArm();
 
+            else:
+                self.ros_1_str += "No command matches"
+
 
             # set the print text to ros_1_str
             self.curDeviceStatus.setText(self.ros_1_str)
 
-            self.cmd_line.clear();
+        self.cmd_line.clear();
 
 
     def initUI(self):
         self.setGeometry(200, 100, 1100, 800)
-        self.setWindowTitle("Contro Center")
+        self.setWindowTitle("Control Center")
 
         self.deviceSettingBox()
         self.statusWindow()
