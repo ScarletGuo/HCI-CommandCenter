@@ -75,8 +75,8 @@ class Ros(Device):
         pass
 
     def get_status(self):
-        super().get_status()
-        pass
+        return super().get_status()
+    
 
     def stand():
         #stand.main()
