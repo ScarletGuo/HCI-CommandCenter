@@ -1,16 +1,12 @@
-# HCI-CommandCenter Group
+# HCI-CommandCenter
 
-## Description
+## First Stage: Find what is in place
+* kinect interface: Wisc-HCI/ConfusionDetectTask/interface.py
 
-We are making a platform to collaborate different devices. With our platform, the researchers can easily track the status of the devices and interact among differnt devices.
+## Second Stage: Implement each terminal
+* kinect
+* ROS
+* eye-tracker
+* ...
 
-
-
-
-
-
-
-
-
-
-
+## Third Stage: GUI
