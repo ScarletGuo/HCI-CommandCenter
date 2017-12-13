@@ -78,10 +78,10 @@ class Ros(Device):
         return super().get_status()
     
 
-    def stand():
-        #stand.main()
-        print("robot standup")
-        pass
+    def stand(self):
+        # stand.main()
+        msg = 'Robot 1 successfully stand up.\n'
+        return msg
 
 
 class Kinect(Device):
