@@ -11,7 +11,7 @@ class ControlCenter(QWidget):
         self.allOut = ""
         self.curDevice = ""
         self.kinect_1_str = "Switch to kinect 1 tab. \n"
-        self.ros_1_str = "Switch to ros 1 tab."
+        self.ros_1_str = "Switch to ros 1 tab.\n"
         self.kinect = device.Device
         self.ros = device.Device
 
@@ -25,9 +25,8 @@ class ControlCenter(QWidget):
             self.kinect_1_str += self.kinect.get_status()
 
         if sender.text() == 'ROS':
-            ros = device.Ros();
-            self.ros_1_str += 'A new ROS device is estabilished with default setting.'
-            self.ros_1_str += 'Current ros_1 is'
+            self.ros = device.Ros();
+            self.ros_1_str += "A new ROS device is estabilished with default setting. \n"
             self.ros_1_str += self.ros.get_status()
 
         if sender.text() == 'EyeTrack':
@@ -101,7 +100,7 @@ class ControlCenter(QWidget):
         # ros 1
         self.ros_1 = QPushButton("ROS_1")
         self.ros_1.clicked.connect(self.tab_clicked)  
-        layout.addWidget(self.ros_1,    0, 1, 1, 1)
+        layout.addWidget(self.ros_1, 0, 1, 1, 1)
 
         layout.addWidget(QPushButton("Dialog_1"), 0, 2, 1, 1)
         layout.addWidget(QPushButton("Kinect_2"), 0, 3, 1, 1)
@@ -123,7 +122,7 @@ class ControlCenter(QWidget):
         instruction = self.cmd_line.text()
         print (instruction)
 
-
+        # if current tab is Kinect_!
         if self.curDevice == 'Kinect_1':
             self.kinect_1_str += instruction
             self.kinect_1_str += '\n'
@@ -138,15 +137,30 @@ class ControlCenter(QWidget):
                 hostNum = 345
                 self.kinect_1_str += self.kinect.set_host(hostNum)
 
-            if 'stand' in instruction:
-                self.ros.stand
-
-
-
             self.curDeviceStatus.setText(self.kinect_1_str)
 
+
+        # if current tab is ROS_1
         elif self.curDevice == 'ROS_1':
-            self.ros_1_str = instruction + "\n" + self.ros_1_str
+
+            self.ros_1_str += instruction
+            self.ros_1_str += '\n'
+
+            if instruction == '>> getStatus':
+                self.ros_1_str += self.ros.get_status()
+
+                if 'setPort' in instruction:
+                    portNum = 123
+                    self.ros_1_str += self.kinect.set_port(portNum)
+
+                if 'setHost' in instruction:
+                    hostNum = 345
+                    self.ros_1_str += self.kinect.set_host(hostNum)
+
+                if 'stand' in instruction:
+                    self.ros.stand
+
+            # set the print text to ros_1_str
             self.curDeviceStatus.setText(self.ros_1_str)
 
 
