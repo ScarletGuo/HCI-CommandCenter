@@ -1,58 +1,19 @@
 '''
-Get all information from specifice device and log them for future reference
+Get all information from specifice device and log them for future referencesdf
 '''
 
 from time import gmtime, strftime
-# from robot_control import standby, simpleWalk, stand, moveHead, moveArm
 
 class Device:
-    # host
-    # port
-
     def __init__(self):
-        msg = "Connection established"
-        self.port = 404
-        self.host = 404
+        self.msg = "default constructor"
         # print("Connection established")
         pass
 
-    '''
-    display device information and status
-    '''
-    def get_status(self):
-        msg = "Current status is running. \n"
-        # print("General device status")
-        return msg
-
-
-    '''
-    set the port of the device
-    '''
-    def set_port(self, portNum):
-        
-        self.port = portNum
-        msg = 'Set port to ' + str(self.port) + '.\n'
-
-        return msg
-
-
-    '''
-    set the host of the device
-    '''
-    def set_host(self, hostNum):
-        
-        self.host = hostNum
-        msg = 'Set host to ' + str(self.host) + '.\n'
-
-        return msg
-
-    def get_port(self):
-
-        return self.port
-
-    def get_host(self):
-
-        return self.host
+    def __init__(self, input_name):
+        self.msg = "Customize constructor for " + input_name
+        self.name = input_name
+        self.counter = 0
 
     '''
         Should receive all the messages displayed and store them into a file (called log.txt maybe).
@@ -69,25 +30,43 @@ class Device:
     def get_command(self, command):
         return command
 
+    '''
+    get name of current device
+    '''
+    def get_name(self):
+        return self.name
+
+    '''
+    display device information and status
+    '''
+    def get_status(self):
+        return self.msg
+
+    '''
+    prepend device information and status
+    '''
+    def add_status(self, newCommand):
+        self.msg = str(self.counter) + " " + newCommand + "\n" + self.msg
+        self.counter += 1
+
 class Ros(Device):
     def __init__(self):
         super().__init__()
         pass
 
+    def __init__(self, input_name):
+        super().__init__(input_name)
+
     def get_status(self):
-        super().get_status()
-        pass
-
-    def stand():
-        #stand.main()
-        print("robot standup")
-        pass
-
+        return super().get_status()
+        
 
 class Kinect(Device):
     def __init__(self):
         super().__init__()
-        pass
+
+    def __init__(self, input_name):
+        super().__init__(input_name)
 
     def get_status(self):
         return super().get_status()
