@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import *
 import device
 
 
+
 class ControlCenter(QWidget):
 
     def __init__(self):
@@ -143,22 +144,19 @@ class ControlCenter(QWidget):
         # if current tab is ROS_1
         elif self.curDevice == 'ROS_1':
 
+            ros_mannual = "1.getStatus\n2.stand\n3.move\n4.sitDown\n5.simpleWalk N\n6.moveHead\n7.moveArm\n"
             self.ros_1_str += instruction
             self.ros_1_str += '\n'
+
+            if instruction == '>> help':
+                self.ros_1_str += ros_mannual
 
             if instruction == '>> getStatus':
                 self.ros_1_str += self.ros.get_status()
 
-                if 'setPort' in instruction:
-                    portNum = 123
-                    self.ros_1_str += self.kinect.set_port(portNum)
+            if instruction == '>> stand':
+                self.ros_1_str += self.ros.stand();
 
-                if 'setHost' in instruction:
-                    hostNum = 345
-                    self.ros_1_str += self.kinect.set_host(hostNum)
-
-                if 'stand' in instruction:
-                    self.ros.stand
 
             # set the print text to ros_1_str
             self.curDeviceStatus.setText(self.ros_1_str)
