@@ -110,10 +110,11 @@ class ControlCenter(QWidget):
         self.curDeviceStatus.setPlainText("Current device status will be displayed here.\n")
         layout.addWidget(self.curDeviceStatus, 1, 0, 1, 4)
 
-        self.cmd_line = QLineEdit(">> ")
+        self.cmd_line = QLineEdit()
         layout.addWidget(self.cmd_line, 2, 0, 1, 3)
         self.submit = QPushButton("Submit")
-        self.submit.clicked.connect(self.submit_clicked)  
+        self.submit.clicked.connect(self.submit_clicked) 
+        self.cmd_line.returnPressed.connect(self.submit.click) 
         layout.addWidget(self.submit, 2, 3, 1, 1)
 
         self.statusBox.setLayout(layout)
@@ -125,9 +126,14 @@ class ControlCenter(QWidget):
 
         # if current tab is Kinect_!
         if self.curDevice == 'Kinect_1':
+            kinect_mannul = "1.getStatus\n2.setPort N\n3.setHost N\n"
+            self.kinect_1_str += '>> '
             self.kinect_1_str += instruction
             self.kinect_1_str += '\n'
-            if instruction == '>> getStatus':
+            if instruction == 'help':
+                self.kinect_1_str += kinect_mannul
+
+            if instruction == 'getStatus':
                 self.kinect_1_str += self.kinect.get_status()
 
             if 'setPort' in instruction:
@@ -145,30 +151,36 @@ class ControlCenter(QWidget):
         elif self.curDevice == 'ROS_1':
 
             ros_mannual = "1.getStatus\n2.stand\n3.move\n4.sitDown\n5.simpleWalk N\n6.moveHead\n7.moveArm\n"
+            self.ros_1_str += '>> '
             self.ros_1_str += instruction
             self.ros_1_str += '\n'
 
-            if instruction == '>> help':
+            if instruction == 'help':
                 self.ros_1_str += ros_mannual
 
-            if instruction == '>> getStatus':
+            if instruction == 'getStatus':
                 self.ros_1_str += self.ros.get_status()
 
-            if instruction == '>> stand':
+            if instruction == 'stand':
                 self.ros_1_str += self.ros.stand();
 
-            if instruction == '>> simpleWalk'
+            if instruction == 'simpleWalk':
                 self.ros_1_str += self.ros.simpleWalk();
 
-            if instruction == '>> standby':
+            if instruction == 'sitDown':
                 self.ros_1_str += self.ros.standby();
 
-            if instruction == '>> moveHead'
+            if instruction == 'moveHead':
                 self.ros_1_str += self.ros.moveHead();
+
+            if instruction == 'moveArm':
+                self.ros_1_str += self.ros.moveArm();
 
 
             # set the print text to ros_1_str
             self.curDeviceStatus.setText(self.ros_1_str)
+
+            self.cmd_line.clear();
 
 
     def initUI(self):
