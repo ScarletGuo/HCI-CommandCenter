@@ -12,8 +12,8 @@ class ControlCenter(QWidget):
         self.outputStr = 1000
         self.allOut = ""
         self.curDevice = ""
-        self.kinect_1_str = "Switch to kinect 1 tab. \n"
-        self.ros_1_str = "Switch to ros 1 tab.\n"
+        self.kinect_1_str = "Switch to kinect 1 tab. \nEnter 'help' to get command lists.\n"
+        self.ros_1_str = "Switch to ros 1 tab.\nEnter 'help' to get command lists.\n"
         self.kinect = device.Device
         self.ros = device.Device
 
