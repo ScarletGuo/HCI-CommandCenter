@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import *
-import device
+import v5_device as device
 
 
 class ControlCenter(QWidget):
@@ -10,6 +10,9 @@ class ControlCenter(QWidget):
         self.num_ros = 0
 
         self.devicesArr = []   
+        self.devicesArr.append(device.Kinect("kinect_" + str(self.num_kinect)))
+        self.num_kinect += 1
+
         self.devicesArr.append(device.Kinect("kinect_" + str(self.num_kinect)))
         self.num_kinect += 1
 
