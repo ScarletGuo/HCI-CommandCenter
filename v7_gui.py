@@ -163,49 +163,64 @@ class ControlCenter(QWidget):
             # if not, create one with specific commands
             # if yes, return busy message
             elif instruction == 'stand':
-                if not os.path.exists('robot_control/output'):
-                    file = open("robot_control/output","w") 
-                    file.write(instruction) 
-                    file.close() 
-                    self.ros_1_str += self.ros.stand();
-                else:
-                    self.ros_1_str += "Other command is in process"
+                try:
+                    if not os.path.exists('robot_control/output'):
+                        file = open("robot_control/output","w") 
+                        file.write(instruction) 
+                        file.close() 
+                        self.ros_1_str += self.ros.stand();
+                    else:
+                        self.ros_1_str += "Other command is in process"
+                except FileNotFoundError:
+                    self.ros_1_str += "Directory: robot_control not detected\n"
 
             elif instruction == 'simpleWalk':
-                if not os.path.exists('robot_control/output'):
-                    file = open("robot_control/output","w") 
-                    file.write(instruction) 
-                    file.close() 
-                    self.ros_1_str += self.ros.simpleWalk();
-                else:
-                    self.ros_1_str += "Other command is in process"
+                try:
+                    if not os.path.exists('robot_control/output'):
+                        file = open("robot_control/output","w") 
+                        file.write(instruction) 
+                        file.close() 
+                        self.ros_1_str += self.ros.simpleWalk();
+                    else:
+                        self.ros_1_str += "Other command is in process"
+                except FileNotFoundError:
+                    self.ros_1_str += "Directory: robot_control not detected\n"
 
             elif instruction == 'sitDown':
-                if not os.path.exists('robot_control/output'):
-                    file = open("robot_control/output","w") 
-                    file.write(instruction) 
-                    file.close() 
-                    self.ros_1_str += self.ros.standby();
-                else:
-                    self.ros_1_str += "Other command is in process"
+                try:
+                    if not os.path.exists('robot_control/output'):
+                        file = open("robot_control/output","w") 
+                        file.write(instruction) 
+                        file.close() 
+                        self.ros_1_str += self.ros.standby();
+                    else:
+                        self.ros_1_str += "Other command is in process"
+                except FileNotFoundError:
+                    self.ros_1_str += "Directory: robot_control not detected\n"
 
             elif instruction == 'moveHead':
-                if not os.path.exists('robot_control/output'):
-                    file = open("robot_control/output","w") 
-                    file.write(instruction) 
-                    file.close() 
-                    self.ros_1_str += self.ros.moveHead();
-                else:
-                    self.ros_1_str += "Other command is in process"
+                try:
+                    if not os.path.exists('robot_control/output'):
+                        file = open("robot_control/output","w") 
+                        file.write(instruction) 
+                        file.close() 
+                        self.ros_1_str += self.ros.moveHead();
+                    else:
+                        self.ros_1_str += "Other command is in process"
+                except FileNotFoundError:
+                    self.ros_1_str += "Directory: robot_control not detected\n"
 
             elif instruction == 'moveArm':
-                if not os.path.exists('robot_control/output'):
-                    file = open("robot_control/output","w") 
-                    file.write(instruction) 
-                    file.close() 
-                    self.ros_1_str += self.ros.moveArm();
-                else:
-                    self.ros_1_str += "Other command is in process"
+                try:
+                    if not os.path.exists('robot_control/output'):
+                        file = open("robot_control/output","w") 
+                        file.write(instruction) 
+                        file.close() 
+                        self.ros_1_str += self.ros.moveArm();
+                    else:
+                        self.ros_1_str += "Other command is in process"
+                except FileNotFoundError:
+                    self.ros_1_str += "Directory: robot_control not detected\n"
                 
             else:
                 self.ros_1_str += "No command matches\n"
