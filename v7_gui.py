@@ -46,10 +46,6 @@ class ControlCenter(QWidget):
         
         print(self.outputStr)
 
-    def add_kinect_btn(self):
-        # a pop up window requires host and port, after clicking "saving" 
-        pass
-
 
     def tab_clicked(self):
         # update status window string
