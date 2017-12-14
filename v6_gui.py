@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import *
 import device
-
+from subprocess import call
 
 
 class ControlCenter(QWidget):
@@ -24,6 +24,7 @@ class ControlCenter(QWidget):
             self.kinect = device.Kinect();
             self.kinect_1_str += 'A new kinect device is established with default setting. \n'
             self.kinect_1_str += self.kinect.get_status()
+
 
         if sender.text() == 'ROS':
             self.ros = device.Ros();
@@ -160,21 +161,27 @@ class ControlCenter(QWidget):
 
             if instruction == 'getStatus':
                 self.ros_1_str += self.ros.get_status()
+                call(["ls", "-l"])
 
             if instruction == 'stand':
                 self.ros_1_str += self.ros.stand();
+                call(["python", "robot_control/stand.py"])
 
             if instruction == 'simpleWalk':
                 self.ros_1_str += self.ros.simpleWalk();
+                call(["python", "robot_control/simpleWalk.py"])
 
             if instruction == 'sitDown':
                 self.ros_1_str += self.ros.standby();
+                call(["python", "robot_control/sitDown.py"])
 
             if instruction == 'moveHead':
                 self.ros_1_str += self.ros.moveHead();
+                call(["python", "robot_control/moveHead.py"])
 
             if instruction == 'moveArm':
                 self.ros_1_str += self.ros.moveArm();
+                call(["python", "robot_control/moveArm.py"])
 
             else:
                 self.ros_1_str += "No command matches"
