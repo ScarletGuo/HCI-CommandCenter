@@ -104,6 +104,10 @@ class Ros(Device):
         msg = 'Robot 1 successfully moved arm. \n'
         return msg
 
+    def tts(self):
+        msg = 'Robot 1 successfully talk.\n'
+        return msg
+
 class Kinect(Device):
     def __init__(self):
         super().__init__()
