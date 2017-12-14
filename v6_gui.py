@@ -164,24 +164,24 @@ class ControlCenter(QWidget):
                 call(["ls", "-l"])
 
             if instruction == 'stand':
-                self.ros_1_str += self.ros.stand();
                 call(["python", "robot_control/stand.py"])
+                self.ros_1_str += self.ros.stand();
 
             if instruction == 'simpleWalk':
-                self.ros_1_str += self.ros.simpleWalk();
                 call(["python", "robot_control/simpleWalk.py"])
+                self.ros_1_str += self.ros.simpleWalk();
 
             if instruction == 'sitDown':
-                self.ros_1_str += self.ros.standby();
                 call(["python", "robot_control/sitDown.py"])
+                self.ros_1_str += self.ros.standby();
 
             if instruction == 'moveHead':
-                self.ros_1_str += self.ros.moveHead();
                 call(["python", "robot_control/moveHead.py"])
+                self.ros_1_str += self.ros.moveHead();
 
             if instruction == 'moveArm':
-                self.ros_1_str += self.ros.moveArm();
                 call(["python", "robot_control/moveArm.py"])
+                self.ros_1_str += self.ros.moveArm();
 
             else:
                 self.ros_1_str += "No command matches"
