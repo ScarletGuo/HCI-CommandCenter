@@ -94,4 +94,4 @@ if __name__ == '__main__':
     msg = "test\n"
     msg += "test\n"
     print(msg)
-    Device.log(msg)
+    Device.log(msg) 
