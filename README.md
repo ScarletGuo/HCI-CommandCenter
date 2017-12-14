@@ -13,8 +13,7 @@
 ## Third Stage: GUI
 
 ## Forth Stage: Collaborating with other groups
-* Add other groups' functions to our code
-* For ROS group:
+### For ROS group:
 * Check if the file used to output exists
 * If not, output file with specific command strings
 * If yes, output busy message to GUI
