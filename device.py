@@ -3,6 +3,8 @@ Get all information from specifice device and log them for future reference
 '''
 
 from time import gmtime, strftime
+import manager
+import v7_gui
 # from robot_control import standby, simpleWalk, stand, moveHead, moveArm
 
 class Device:
@@ -68,11 +70,15 @@ class Device:
     '''
     def get_command(self, command):
         return command
+
 # the robot can perform following functions:
 # standby, simpleWalk, stand, moveHead, moveArm 
 class Ros(Device):
     def __init__(self):
         super().__init__()
+        v7_gui.rid += 1
+        self.ID = v7_gui.rid
+        self.msg = []
         pass
 
     def get_status(self):
@@ -104,10 +110,18 @@ class Ros(Device):
         msg = 'Robot 1 successfully moved arm. \n'
         return msg
 
+    def send(self, dev, action):
+        return "{} successfully {}\n".format(dev, action)
+
+    def fail(self, dev, action):
+        return "Error: {} failed to {}\n".format(dev, action)
+
 class Kinect(Device):
     def __init__(self):
         super().__init__()
-        pass
+        v7_gui.kid += 1
+        self.ID = v7_gui.kid
+        self.msg = []
 
     def get_status(self):
         return super().get_status()
@@ -115,7 +129,9 @@ class Kinect(Device):
 class EyeTracker(Device):
     def __init__(self):
         super().__init__()
-        pass
+        v7_gui.eid += 1
+        self.ID = v7_gui.eid
+        self.msg = []
 
     def get_status(self):
         return super().get_status()
@@ -123,7 +139,9 @@ class EyeTracker(Device):
 class Dialogue(Device):
     def __init__(self):
         super().__init__()
-        pass
+        v7_gui.did += 1
+        self.ID = v7_gui.did
+        self.msg = []
 
     def get_status(self):
         return super().get_status()
@@ -132,7 +150,7 @@ class Dialogue(Device):
 For test use
 """
 if __name__ == '__main__':
-    msg = "test\n"
-    msg += "test\n"
-    print(msg)
+    # msg = "test\n"
+    # msg += "test\n"
+    # print(msg)
     Device.log(msg)

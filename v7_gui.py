@@ -1,19 +1,25 @@
 from PyQt5.QtWidgets import *
 import device
 from subprocess import call
-import os
 import sys
+from manager import manager
 
+kid = 0
+eid = 0
+did = 0
+rid = 0
 
 class ControlCenter(QWidget):
 
-    def __init__(self):
+    def __init__(self, app):
         super().__init__()
+        self.app = app
+        self.manager = manager()
         self.outputStr = 1000
         self.allOut = ""
         self.curDevice = ""
-        self.kinect_1_str = "Switch to kinect 1 tab. \nEnter 'help' to get command lists.\n"
-        self.ros_1_str = "Switch to ros 1 tab.\nEnter 'help' to get command lists.\n"
+        # self.kinect_1_str = "Switch to kinect 1 tab. \nEnter 'help' to get command lists.\n"
+        # self.ros_1_str = "Switch to ros 1 tab.\nEnter 'help' to get command lists.\n"
         self.kinect = device.Device
         self.ros = device.Device
 
@@ -21,30 +27,9 @@ class ControlCenter(QWidget):
 
     def buttonClicked(self):
         sender = self.sender()
-        if sender.text() == 'Kinect':
-            self.kinect = device.Kinect();
-            self.kinect_1_str += 'A new kinect device is established with default setting. \n'
-            self.kinect_1_str += self.kinect.get_status()
-
-
-        if sender.text() == 'ROS':
-            self.ros = device.Ros();
-            self.ros_1_str += "A new ROS device is estabilished with default setting. \n"
-            self.ros_1_str += self.ros.get_status()
-
-        if sender.text() == 'EyeTrack':
-            eye_track = device.EyeTracker();
-            self.curDeviceStatus.setText(sender.text() + ': a new Eye Tracking device is estabilished with default setting. \n');
-
-        if sender.text() == 'Dialog':
-            dialog = device.Dialogue();
-            self.curDeviceStatus.setText(sender.text() + ': a new System Dialog device is estabilished with default setting. \n');
-
-
-
-        self.outputStr += 1
-        
-        print(self.outputStr)
+        new = self.manager.addDevice(sender.text())
+        self.updateStatus(new, sender.text())
+        # self.outputStr += 1
 
     def add_kinect_btn(self):
         # a pop up window requires host and port, after clicking "saving" 
@@ -54,20 +39,21 @@ class ControlCenter(QWidget):
     def tab_clicked(self):
         # update status window string
         sender = self.sender()
-        if sender.text() == 'Kinect_1':
-            self.kinect_1.setDefault(False)
-            self.ros_1.setDefault(False)
-            sender.setDefault(True)
+        txt = sender.text()
+        self.curDevice = sender.text()
+        self.curDeviceStatus.setText(''.join(self.manager.devices[txt].msg))
+        # if "Kinect" in txt:
+        #     self.kinect_1.setDefault(False)
+        #     self.ros_1.setDefault(False)
+        #     sender.setDefault(True)
 
-            self.curDevice = 'Kinect_1'
-            self.curDeviceStatus.setText(self.kinect_1_str)
-        elif sender.text() == 'ROS_1':
-            self.kinect_1.setDefault(False)
-            self.ros_1.setDefault(False)
-            sender.setDefault(True)
+        # elif sender.text() == 'ROS_1':
+        #     self.kinect_1.setDefault(False)
+        #     self.ros_1.setDefault(False)
+        #     sender.setDefault(True)
             
-            self.curDevice = 'ROS_1'
-            self.curDeviceStatus.setText(self.ros_1_str)
+        #     self.curDevice = 'ROS_1'
+            
 
     def deviceSettingBox(self):
         self.gridGroupBox = QGroupBox("Devices")
@@ -79,154 +65,113 @@ class ControlCenter(QWidget):
         self.kinect.clicked.connect(self.buttonClicked)  
         layout.addWidget(self.kinect, 0, 0, 1, 1)
         # ROS btn
-        self.ros = QPushButton("ROS")
+        self.ros = QPushButton("Ros")
         self.ros.clicked.connect(self.buttonClicked) 
         layout.addWidget(self.ros, 1, 0, 1, 1)
         # eye track btn
-        self.eye_track = QPushButton("EyeTrack")
+        self.eye_track = QPushButton("EyeTracker")
         self.eye_track.clicked.connect(self.buttonClicked) 
         layout.addWidget(self.eye_track, 2, 0, 1, 1)
         # Dialog btn
-        self.ros = QPushButton("Dialog")
+        self.ros = QPushButton("Dialogue")
         layout.addWidget(self.ros, 3, 0, 1, 1)
         self.ros.clicked.connect(self.buttonClicked) 
 
         self.gridGroupBox.setLayout(layout)
 
-    def statusWindow(self):
-        self.statusBox = QGroupBox("Status Window")
-        layout = QGridLayout()
-        # kinect 1
-        self.kinect_1 = QPushButton("Kinect_1")
-        self.kinect_1.clicked.connect(self.tab_clicked)  
-        layout.addWidget(self.kinect_1, 0, 0, 1, 1)
-        # ros 1
-        self.ros_1 = QPushButton("ROS_1")
-        self.ros_1.clicked.connect(self.tab_clicked)  
-        layout.addWidget(self.ros_1, 0, 1, 1, 1)
+    def initStatus(self):
+        self.statusBar = QHBoxLayout()
+        if len(self.manager.devices) != 0:
+            for d in self.manager.devices.values():
+                if type(d) is device.Kinect:
+                    self.kinect = QPushButton("Kinect_{}".format(d.ID))
+                    self.kinect.clicked.connect(self.tab_clicked)
+                    self.statusBar.addWidget(self.kinect) 
+                elif type(d) == device.Ros:
+                    self.ros = QPushButton("Ros_{}".format(d.ID))
+                    self.ros.clicked.connect(self.tab_clicked)
+                    self.statusBar.addWidget(self.ros) 
+                elif type(d) == device.EyeTracker:
+                    self.eyetracker = QPushButton("EyeTracker_{}".format(d.ID))
+                    self.eyetracker.clicked.connect(self.tab_clicked)
+                    self.statusBar.addWidget(self.eyetracker) 
+                elif type(d) == device.Dialogue:
+                    self.dialog = QPushButton("Dialogue_{}".format(d.ID))
+                    self.dialog.clicked.connect(self.tab_clicked)
+                    self.statusBar.addWidget(self.dialog)
+                else:
+                    print("Error: does not support the device")
+        self.layout.addLayout(self.statusBar, 0, 0)
+        self.statusBox.setLayout(self.layout)
+        self.statusBox.show()
+        self.app.processEvents()
 
-        layout.addWidget(QPushButton("Dialog_1"), 0, 2, 1, 1)
-        layout.addWidget(QPushButton("Kinect_2"), 0, 3, 1, 1)
+    def updateStatus(self, d, dtype):
+        btn = QPushButton("{}_{}".format(dtype, d.ID))
+        btn.clicked.connect(self.tab_clicked)
+        self.statusBar.addWidget(btn)
+
+    def statusWindow(self):
+        self.statusBox = QWidget()
+        self.statusBox.setWindowTitle("Status Window")
+        self.layout = QGridLayout()
+
+        # self.statusBar = QHBoxLayout()
+
+        # if len(self.manager.devices) != 0:
+        #     for d in manager.devices:
+        #         if type(d) is Kindect:
+        #             self.kinect = QPushButton("Kinect_{}".format(d.ID))
+        #             self.kinect.clicked.connect(self.tab_clicked)
+        #             self.statusBar.addWidget(self.kinect) 
+        #         elif type(d) == ROS:
+        #             self.ros = QPushButton("ROS_{}".format(d.ID))
+        #             self.ros.clicked.connect(self.tab_clicked)
+        #             self.statusBar.addWidget(self.ros) 
+        #         elif type(d) == EyeTracker:
+        #             self.eyetracker = QPushButton("EyeTracker_{}".format(d.ID))
+        #             self.eyetracker.clicked.connect(self.tab_clicked)
+        #             self.statusBar.addWidget(self.eyetracker) 
+        #         elif type(d) == Dialogue:
+        #             self.dialog = QPushButton("Dialogue_{}".format(d.ID))
+        #             self.dialog.clicked.connect(self.tab_clicked)
+        #             self.statusBar.addWidget(self.dialog)
+
+        # self.layout.addLayout(self.statusBar, 0, 0)
+        self.initStatus()
 
         self.curDeviceStatus = QTextEdit()
         self.curDeviceStatus.setPlainText("Current device status will be displayed here.\nPlease use buttons on the left side to create new devices.\nPlease use button at top to view the status of specific device.")
-        layout.addWidget(self.curDeviceStatus, 1, 0, 1, 4)
+        self.layout.addWidget(self.curDeviceStatus, 1, 0)
 
         self.cmd_line = QLineEdit()
-        layout.addWidget(self.cmd_line, 2, 0, 1, 3)
+        self.layout.addWidget(self.cmd_line, 2, 0)
         self.submit = QPushButton("Submit")
         self.submit.clicked.connect(self.submit_clicked) 
         self.cmd_line.returnPressed.connect(self.submit.click) 
-        layout.addWidget(self.submit, 2, 3, 1, 1)
+        self.layout.addWidget(self.submit, 3, 1)
 
-        self.statusBox.setLayout(layout)
+        self.statusBox.setLayout(self.layout)
 
     def submit_clicked(self):
         sender = self.sender()
         instruction = self.cmd_line.text()
         print (instruction)
-
-        # if current tab is Kinect_!
-        if self.curDevice == 'Kinect_1':
-            kinect_mannul = "1.getStatus\n2.setPort N\n3.setHost N\n"
-            self.kinect_1_str += '>> '
-            self.kinect_1_str += instruction
-            self.kinect_1_str += '\n'
-            if instruction == 'help':
-                self.kinect_1_str += kinect_mannul
-
-            if instruction == 'getStatus':
-                self.kinect_1_str += self.kinect.get_status()
-
-            if 'setPort' in instruction:
-                portNum = 123
-                self.kinect_1_str += self.kinect.set_port(portNum)
-
-            if 'setHost' in instruction:
-                hostNum = 345
-                self.kinect_1_str += self.kinect.set_host(hostNum)
-
-            self.curDeviceStatus.setText(self.kinect_1_str)
-
-
-        # if current tab is ROS_1
-        elif self.curDevice == 'ROS_1':
-
-            ros_mannual = "1.getStatus\n3.move\n4.sitDown\n5.simpleWalk N\n6.moveHead\n2.moveArm\n"
-            self.ros_1_str += '>> '
-            self.ros_1_str += instruction
-            self.ros_1_str += '\n'
-
-            if instruction == 'help':
-                self.ros_1_str += ros_mannual
-
-            elif instruction == 'getStatus':
-                self.ros_1_str += self.ros.get_status()
-
-            # check if the output exists
-            # if not, create one with specific commands
-            # if yes, return busy message
-            elif instruction == 'stand':
-                if not os.path.exists('robot_control/output'):
-                    file = open("robot_control/output","w") 
-                    file.write(instruction) 
-                    file.close() 
-                    self.ros_1_str += self.ros.stand();
-                else:
-                    self.ros_1_str += "Other command is in process"
-
-            elif instruction == 'simpleWalk':
-                if not os.path.exists('robot_control/output'):
-                    file = open("robot_control/output","w") 
-                    file.write(instruction) 
-                    file.close() 
-                    self.ros_1_str += self.ros.simpleWalk();
-                else:
-                    self.ros_1_str += "Other command is in process"
-
-            elif instruction == 'sitDown':
-                if not os.path.exists('robot_control/output'):
-                    file = open("robot_control/output","w") 
-                    file.write(instruction) 
-                    file.close() 
-                    self.ros_1_str += self.ros.standby();
-                else:
-                    self.ros_1_str += "Other command is in process"
-
-            elif instruction == 'moveHead':
-                if not os.path.exists('robot_control/output'):
-                    file = open("robot_control/output","w") 
-                    file.write(instruction) 
-                    file.close() 
-                    self.ros_1_str += self.ros.moveHead();
-                else:
-                    self.ros_1_str += "Other command is in process"
-
-            elif instruction == 'moveArm':
-                if not os.path.exists('robot_control/output'):
-                    file = open("robot_control/output","w") 
-                    file.write(instruction) 
-                    file.close() 
-                    self.ros_1_str += self.ros.moveArm();
-                else:
-                    self.ros_1_str += "Other command is in process"
-                
-            else:
-                self.ros_1_str += "No command matches\n"
-
-
-            # set the print text to ros_1_str
-            self.curDeviceStatus.setText(self.ros_1_str)
-
+        d = self.manager.devices[self.curDevice]
+        d.msg += '>> '
+        d.msg += instruction
+        d.msg += '\n'
+        self.manager.action(self.curDevice, instruction)
         self.cmd_line.clear();
+        self.curDeviceStatus.setText(''.join(d.msg))
 
 
     def initUI(self):
         self.setGeometry(200, 100, 1100, 800)
         self.setWindowTitle("Control Center")
 
-        self.deviceSettingBox()
         self.statusWindow()
+        self.deviceSettingBox()
         mainLayout = QGridLayout()
         mainLayout.addWidget(self.gridGroupBox, 0, 0)
         mainLayout.addWidget(self.statusBox, 0, 1, 1, 5)
@@ -237,5 +182,5 @@ class ControlCenter(QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    cc = ControlCenter()
+    cc = ControlCenter(app)
     sys.exit(app.exec_())
